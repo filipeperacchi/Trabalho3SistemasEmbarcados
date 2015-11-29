@@ -161,6 +161,9 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 
 		// NOTE: sensor listeners are registered in onResume
 
+		// Keeps the screen on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 		// setup the screen refresh timer (updates every REFRESH_INTERVAL milliseconds)
 		refreshScreen = new ScreenRefreshTimer(REFRESH_INTERVAL, REFRESH_INTERVAL);
 		refreshScreen.start();
