@@ -54,7 +54,7 @@ public class RollingBallPanel extends View
     final float SCENARIOS[][][] =
     { //scenarios
         { //scenario 1
-            {250,350,350,450}, //scenario 1: square 1 coordinates
+            {0,0,0,0}, //scenario 1: square 1 coordinates
         },
         { //scenario 2
             {300,20,400,40}, //scenario 2: square 1 coordinates
@@ -101,6 +101,7 @@ public class RollingBallPanel extends View
 	boolean tapToStart = false; //locks the ball position on start of level, player must tap screen to start
 	boolean timeStop = false; //if true, ball does not move
 	int currentLevel; //contador de nível do jogo (cada vez que toca no quadrado verde = +1 level)
+    int invertOption, invertX, invertY;
 	//~~~~~~~
     Random random;
 
@@ -259,31 +260,31 @@ public class RollingBallPanel extends View
 		tiltMagnitude = tiltMagnitude > MAX_MAGNITUDE ? MAX_MAGNITUDE : tiltMagnitude;
 
 		// This is the only code that distinguishes velocity-control from position-control
-		if (orderOfControl.equals("Velocity")) // velocity control
-		{
+//		if (orderOfControl.equals("Velocity")) // velocity control
+//		{
 			if (!timeStop) {
 				// compute how far the ball should move
 				velocity = tiltMagnitude * gain;
 				dBall = dT * velocity; // make the ball move this amount (pixels)
 
 				// compute the ball's new coordinates
-				float dx = (float) Math.sin(tiltAngle * DEGREES_TO_RADIANS) * dBall;
-				float dy = (float) Math.cos(tiltAngle * DEGREES_TO_RADIANS) * dBall;
+				float dx = (float) Math.sin(tiltAngle * DEGREES_TO_RADIANS) * dBall * invertX;
+				float dy = (float) Math.cos(tiltAngle * DEGREES_TO_RADIANS) * dBall * invertY;
 				xBall += dx;
 				yBall += dy;
 			}
-		} else
-		// position control
-		{
-			// compute how far the ball should move
-			dBall = tiltMagnitude * gain;
-
-			// compute the ball's new coordinates
-			float dx = (float)Math.sin(tiltAngle * DEGREES_TO_RADIANS) * dBall;
-			float dy = (float)Math.cos(tiltAngle * DEGREES_TO_RADIANS) * dBall;
-			xBall = xCenter + dx;
-			yBall = yCenter + dy;
-		}
+//		} else
+//		// position control
+//		{
+//			// compute how far the ball should move
+//			dBall = tiltMagnitude * gain;
+//
+//			// compute the ball's new coordinates
+//			float dx = (float)Math.sin(tiltAngle * DEGREES_TO_RADIANS) * dBall * invert;
+//			float dy = (float)Math.cos(tiltAngle * DEGREES_TO_RADIANS) * dBall * invert;
+//			xBall = xCenter + dx;
+//			yBall = yCenter + dy;
+//		}
 
 		// keep the ball visible (also, restore if NaN)
 		if (Float.isNaN(xBall) || xBall < 0)
@@ -306,6 +307,8 @@ public class RollingBallPanel extends View
 //			timeStop = true;
 //			invalidate();
             chosenScenario = random.nextInt(NUM_SCENARIOS); //nº entre 0 e NUM_SCENARIOS-1
+            while (chosenScenario == 0)
+                chosenScenario = random.nextInt(NUM_SCENARIOS); //nº 0 não tem obstáculos, é apenas o level inicial
 
 			++currentLevel;
 			levelCleared = 1;
@@ -321,7 +324,7 @@ public class RollingBallPanel extends View
 			finishRectangle.bottom = yCenter - finishSquare[3];
 
 		}//bola acerta quadrado vermelho = LOSE
-		else if (ballTouchingLine() == -1 && !touchFlag)
+		else if (ballTouchingLine() == -1 && !touchFlag && levelCleared != -1)
 		{
 			touchFlag = true;
 			vib.vibrate(10); // 10 ms vibrotactile pulse
@@ -507,6 +510,13 @@ public class RollingBallPanel extends View
 	 */
 	public void configure(float w, float h, float scalingFactorArg, String pathMode, String pathWidthArg)
 	{
+        switch (invertOption) {
+            case 0: invertX = 1; invertY = 1; break;
+            case 1: invertX = -1; invertY = 1; break;
+            case 2: invertX = 1; invertY = -1; break;
+            case 3: invertX = -1; invertY = -1; break;
+        }
+
 		screenWidth = w;
 		screenHeight = h;
 		scalingFactor = scalingFactorArg;

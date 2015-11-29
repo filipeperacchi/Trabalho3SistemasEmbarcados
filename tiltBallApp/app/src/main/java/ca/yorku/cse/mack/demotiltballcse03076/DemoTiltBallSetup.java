@@ -25,7 +25,7 @@ public class DemoTiltBallSetup extends Activity
 {
 	private Spinner spinOrderOfControl, spinGain, spinPathMode, spinPathWidth, spinlapNum;
 
-	final String[] ORDER_OF_CONTROL = { "Velocity", "Position" }; // NOTE: do not change strings
+	final String[] ORDER_OF_CONTROL = { "Default", "Invert X", "Invert Y", "Invert All" }; // NOTE: do not change strings
 	final String[] GAIN = { "Very low", "Low", "Medium", "High", "Very high" };
 	final String[] PATH_TYPE = { "Square", "Circle", "Free" };
 	final String[] PATH_WIDTH = { "Narrow", "Medium", "Wide" };
@@ -74,22 +74,27 @@ public class DemoTiltBallSetup extends Activity
 		String orderOfControl = (String) spinOrderOfControl.getSelectedItem();
 
 		// actual gain value depends on order of control
-		int gain;
-		if (orderOfControl.equals("Velocity"))
-			gain = GAIN_ARG_VELOCITY_CONTROL[spinGain.getSelectedItemPosition()];
-		else
-			gain = GAIN_ARG_POSITION_CONTROL[spinGain.getSelectedItemPosition()];
-		
+		int invert;
+		if (orderOfControl.equals("Default"))
+            invert = 0;
+		else if (orderOfControl.equals("Invert X"))
+            invert = 1;
+        else if (orderOfControl.equals("Invert Y"))
+            invert = 2;
+        else
+            invert = 3;
+
 		String pathType = PATH_TYPE[spinPathMode.getSelectedItemPosition()];
 		String pathWidth = PATH_WIDTH[spinPathWidth.getSelectedItemPosition()];
 		String lapNums = NUM_LAPS[spinlapNum.getSelectedItemPosition()];
 		// bundle up parameters to pass on to activity
 		Bundle b = new Bundle();
-		b.putString("orderOfControl", orderOfControl);
-		b.putInt("gain", gain);
-		b.putString("pathType", pathType);
-		b.putString("pathWidth", pathWidth);
-		b.putString("totalLaps", lapNums);
+		b.putString("orderOfControl", "Velocity");
+		b.putInt("gain", GAIN_ARG_VELOCITY_CONTROL[0]);
+        b.putInt("invert", invert);
+		b.putString("pathType", PATH_TYPE[0]);
+		b.putString("pathWidth", PATH_WIDTH[0]);
+		b.putString("totalLaps", NUM_LAPS[0]);
 
 		// start experiment activity
 		Intent i = new Intent(getApplicationContext(), DemoTiltBallActivity.class);

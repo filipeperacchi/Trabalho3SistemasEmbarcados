@@ -107,9 +107,10 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 
 		// configure rolling ball panel, as per screen parameters and setup parameters
 		rb = (RollingBallPanel)findViewById(R.id.rollingballpanel);
-		rb.configure((float)w, (float)h, scalingFactor, pathType, pathWidth);
+        rb.invertOption = b.getInt("invert");
+        rb.configure((float) w, (float)h, scalingFactor, pathType, pathWidth);
 		rb.setGain(gain);
-		rb.setOrderOfControl(orderOfControl);
+		//rb.setOrderOfControl(orderOfControl);
 		rb.setVibrator((Vibrator) getSystemService(Context.VIBRATOR_SERVICE));
 		rb.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -121,12 +122,12 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 						rb.yBall = 0;
 					}
 					else if (rb.levelCleared == 0){//game still running
-						rb.timeStop = true;
+//						rb.timeStop = true;
 						rb.tapToStart = true;
 					}
 				if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 					rb.timeStop = false;
-					rb.levelCleared = 0;
+					//rb.levelCleared = 0;
 				}
 				return true;
 			}
