@@ -12,6 +12,8 @@ import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.Random;
+
 /**
 * DemoAndroid - with modifications by...
 *
@@ -23,6 +25,43 @@ import android.view.View;
 
 public class RollingBallPanel extends View
 {
+    /*SCENARIOS[][][]:
+    Contém os cenários do jogo. Como está descrito abaixo, cada
+    cenário tem a descrição dos quadrados (só os vermelhos) que
+    o compoem. As coordenadas estão organizadas dessa forma:
+
+    {L,T,R,B} = L: left, T: top, R: right, B: bottom.
+
+    As coordenadas devem ser armazenadas dessa forma ou o
+    quadrado não será desenhado ou será desenhado errado.
+
+               Top              Plano cartesiano da tela do celular:
+            _________               +-------------------------> +X
+            |       |          =>   |                       |
+    Left    |       |   Right  =>   |   tela do celular     |
+            |_______|          =>   |                       |
+             Bottom                 ↓ +Y                    |
+    */
+    final float SCENARIOS[][][] =
+    { //scenarios
+        { //scenario 1
+            {250,350,350,450}, //scenario 1: square 1 coordinates
+        },
+        { //scenario 2
+            {300,20,400,40}, //scenario 2: square 1 coordinates
+            {200,20,300,800}, //scenario 2: square 2 coordinates
+            {400,600,450,650}  //scenario 2: square 3 coordinates
+        },
+        { //scenario 3
+            {0,0,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
+        }
+    };//NÃO SE ESQUEÇA DE ATUALIZAR AS FLAGS ABAIXO
+    final int NUM_SCENARIOS = 3; //número de cenários existentes (no momento, 3)
+    final int SQUARES[] = {1,3,3}; //número de quadrados de cada cenário (no momento o cenario 1 tem 1 e o resto tem 3)
+    int chosenScenario; //cenário escolhido para ser desenhado
+
 	final static String MYDEBUG = "MYDEBUG"; // for Log.i messages
 	final float DEGREES_TO_RADIANS = 0.0174532925f;
 	final int DEFAULT_BALL_DIAMETER = 10;
@@ -53,6 +92,7 @@ public class RollingBallPanel extends View
 	boolean timeStop = false; //if true, ball does not move
 	int currentLevel; //contador de nível do jogo (cada vez que toca no quadrado verde = +1 level)
 	//~~~~~~~
+    Random random;
 
 	//Check Laps
 //	boolean lapStart = false;
@@ -112,6 +152,7 @@ public class RollingBallPanel extends View
 	// things that can be initialized from within this View
 	private void initialize()
 	{
+        random = new Random();
 		finishSquare = FINISH_SQUARE_A;
 
 		finishLinePaint = new Paint();
@@ -252,10 +293,13 @@ public class RollingBallPanel extends View
 		{
 //			touchFlag = true;
 //			vib.vibrate(10); // 10 ms vibrotactile pulse
+//			timeStop = true;
+//			invalidate();
+            chosenScenario = random.nextInt(NUM_SCENARIOS); //nº entre 0 e NUM_SCENARIOS-1
+
 			++currentLevel;
 			levelCleared = 1;
 			labelColor = 0xffffffff;
-//			timeStop = true;
 			if (finishSquare == FINISH_SQUARE_A)
 				finishSquare = FINISH_SQUARE_B;
 			else
@@ -266,7 +310,6 @@ public class RollingBallPanel extends View
 			finishRectangle.right = xCenter + finishSquare[2];
 			finishRectangle.bottom = yCenter - finishSquare[3];
 
-//			invalidate();
 		}//bola acerta quadrado vermelho = LOSE
 		else if (ballTouchingLine() == -1 && !touchFlag)
 		{
@@ -281,7 +324,6 @@ public class RollingBallPanel extends View
 			Intent i = new Intent(this.getContext(), DemoTiltBallSetup.class);
 			this.getContext().startActivity(i); //retorna ao menu principal
 		}
-
 
 //		 if(lapStart == false && lapCheckOneBool == false && RectF.intersects(ballNow,lineStart)){
 //			lapStart = true;
@@ -307,12 +349,12 @@ public class RollingBallPanel extends View
 //			Log.i(MYDEBUG, "NEW LAP");
 //		}
 
-
 		invalidate(); // force onDraw to redraw the screen with the ball in its new position
 	}
 
 	protected void onDraw(Canvas canvas)
 	{
+        int i;
 		//Lap Start
 //		lineStart.left = finishRectangle.left;
 //		lineStart.top = (float) (canvas.getHeight() * 0.5);
@@ -339,13 +381,30 @@ public class RollingBallPanel extends View
 			// draw screen border
 			canvas.drawRect(screenBorderRectangle, screenBorderPaint);
 
-			// draw fills
+			// draw finish square
 			canvas.drawRect(finishRectangle, finishFillPaint);
-			canvas.drawRect(dangerRectangle, dangerFillPaint);
-
-			// draw lines
 			canvas.drawRect(finishRectangle, finishLinePaint);
-			canvas.drawRect(dangerRectangle, dangerLinePaint);
+
+			// draw danger square
+//			canvas.drawRect(dangerRectangle, dangerLinePaint);
+//			canvas.drawRect(dangerRectangle, dangerFillPaint);
+
+            for (i=0; i<SQUARES[chosenScenario]; i++) {
+                //desenha bordas
+                canvas.drawRect(
+                        SCENARIOS[chosenScenario][i][0],
+                        SCENARIOS[chosenScenario][i][1],
+                        SCENARIOS[chosenScenario][i][2],
+                        SCENARIOS[chosenScenario][i][3],
+                        dangerLinePaint);
+                //desenha preenchimento
+                canvas.drawRect(
+                        SCENARIOS[chosenScenario][i][0],
+                        SCENARIOS[chosenScenario][i][1],
+                        SCENARIOS[chosenScenario][i][2],
+                        SCENARIOS[chosenScenario][i][3],
+                        dangerFillPaint);
+            }
 		}
 //		else if (pathType == PATH_TYPE_CIRCLE)
 //		{
@@ -376,7 +435,11 @@ public class RollingBallPanel extends View
 //		{
 //			//canvas.drawText("Wall hits = " + wallHits, 6f, screenHeight - offset - 5f * (statsTextSize + gap),statsPaint);
 
-		canvas.drawText("Level "+ currentLevel, screenWidth - 165, screenHeight/10f - 50, statsPaint);
+        canvas.drawText("Level "+ currentLevel, screenWidth - 165, screenHeight/10f - 50, statsPaint);
+        //debug :P
+        canvas.drawText("Screen Width: " + screenWidth, 0, screenHeight/10f - 50, statsPaint);
+        canvas.drawText("Screen Height: " + screenHeight, 0, screenHeight/10f - 25, statsPaint);
+        canvas.drawText("Scenario: " + chosenScenario, 0, screenHeight/10f + 0, statsPaint);
 
 		if (labelColor != 0x00ffffff) {
 			labelPaint.setColor(labelColor);
@@ -470,7 +533,7 @@ public class RollingBallPanel extends View
 		screenBorderRectangle.bottom = screenHeight - 1;
 
 		radiusOuter = screenWidth < screenHeight ? 0.40f * screenWidth : 0.40f * screenHeight;
-		//green square
+		//green square level 0
 		finishRectangle.left = xCenter + finishSquare[0];
 		finishRectangle.top = yCenter - finishSquare[1];
 		finishRectangle.right = xCenter + finishSquare[2];
@@ -479,7 +542,7 @@ public class RollingBallPanel extends View
 		// NOTE: path width is 4 x ball diameter
 		radiusInner = radiusOuter - pathWidth * ballDiameter;
 
-		//red square
+		//red square level 0
 		dangerRectangle.left = xCenter - radiusInner;
 		dangerRectangle.top = yCenter - radiusInner;
 		dangerRectangle.right = xCenter + radiusInner;
@@ -520,7 +583,8 @@ public class RollingBallPanel extends View
 	// returns true if the ball is touching the line of the inner or outer square/circle
 	public int ballTouchingLine()
 	{
-			
+        int i, status = 0;
+
 		if (pathType == PATH_TYPE_SQUARE)
 		{
 //			ballNow.left = xBall;
@@ -533,10 +597,20 @@ public class RollingBallPanel extends View
 			ballNow.bottom = yBallCenter + 1;
 
 			if (RectF.intersects(ballNow, finishRectangle))
-				return 1; // touching outside square
+                status = 1; // touching outside square
 
-			if (RectF.intersects(ballNow, dangerRectangle))
-				return -1; // touching inside square
+//			if (RectF.intersects(ballNow, dangerRectangle))
+//				return -1; // touching inside square
+
+            for (i=0; i<SQUARES[chosenScenario]; i++) {
+                dangerRectangle.left = SCENARIOS[chosenScenario][i][0];
+                dangerRectangle.top = SCENARIOS[chosenScenario][i][1];
+                dangerRectangle.right = SCENARIOS[chosenScenario][i][2];
+                dangerRectangle.bottom = SCENARIOS[chosenScenario][i][3];
+                if (RectF.intersects(ballNow, dangerRectangle))
+                    status = -1;
+            }
+            return status;
 		}
 
 		else if (pathType == PATH_TYPE_CIRCLE)
@@ -550,6 +624,6 @@ public class RollingBallPanel extends View
 			if (Math.abs(ballDistance - radiusInner) < (ballDiameter / 2f))
 				return -1; // touching inner circle
 		}
-		return 0;
+		return status;
 	}
 }
