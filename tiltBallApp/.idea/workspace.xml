@@ -59,23 +59,23 @@
       <file leaf-file-name="RollingBallPanel.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/ca/yorku/cse/mack/demotiltballcse03076/RollingBallPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.583691">
-              <caret line="51" column="74" selection-start-line="51" selection-start-column="74" selection-end-line="51" selection-end-column="74" />
+            <state vertical-scroll-proportion="0.8268956">
+              <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
               <folding>
                 <element signature="docComment;class#RollingBallPanel#0" expanded="false" />
-                <element signature="e#7389#7390#0" expanded="true" />
-                <element signature="e#7410#7411#0" expanded="true" />
-                <element signature="e#7563#7564#0" expanded="true" />
-                <element signature="e#7594#7595#0" expanded="true" />
-                <element signature="e#9768#9790#0" expanded="false" />
-                <element signature="e#10908#11002#0" expanded="false" />
-                <element signature="e#11796#11807#0" expanded="false" />
-                <element signature="e#12793#12814#0" expanded="false" />
-                <element signature="e#13681#13723#0" expanded="false" />
-                <element signature="e#15949#16059#0" expanded="false" />
-                <element signature="e#18931#18933#0" expanded="false" />
+                <element signature="e#7394#7395#0" expanded="true" />
+                <element signature="e#7415#7416#0" expanded="true" />
+                <element signature="e#7568#7569#0" expanded="true" />
+                <element signature="e#7599#7600#0" expanded="true" />
+                <element signature="e#9773#9795#0" expanded="false" />
+                <element signature="e#10913#11007#0" expanded="false" />
+                <element signature="e#11801#11812#0" expanded="false" />
+                <element signature="e#12798#12819#0" expanded="false" />
+                <element signature="e#13686#13728#0" expanded="false" />
+                <element signature="e#15954#16064#0" expanded="false" />
+                <element signature="e#18936#18938#0" expanded="false" />
                 <element signature="method#trim#0;class#RollingBallPanel#0" expanded="false" />
-                <element signature="e#20388#20414#0" expanded="false" />
+                <element signature="e#20393#20419#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -1682,7 +1682,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19222222" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19222222" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -1737,23 +1737,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/ca/yorku/cse/mack/demotiltballcse03076/RollingBallPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.583691">
-          <caret line="51" column="74" selection-start-line="51" selection-start-column="74" selection-end-line="51" selection-end-column="74" />
+        <state vertical-scroll-proportion="0.8268956">
+          <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
           <folding>
             <element signature="docComment;class#RollingBallPanel#0" expanded="false" />
-            <element signature="e#7389#7390#0" expanded="true" />
-            <element signature="e#7410#7411#0" expanded="true" />
-            <element signature="e#7563#7564#0" expanded="true" />
-            <element signature="e#7594#7595#0" expanded="true" />
-            <element signature="e#9768#9790#0" expanded="false" />
-            <element signature="e#10908#11002#0" expanded="false" />
-            <element signature="e#11796#11807#0" expanded="false" />
-            <element signature="e#12793#12814#0" expanded="false" />
-            <element signature="e#13681#13723#0" expanded="false" />
-            <element signature="e#15949#16059#0" expanded="false" />
-            <element signature="e#18931#18933#0" expanded="false" />
+            <element signature="e#7394#7395#0" expanded="true" />
+            <element signature="e#7415#7416#0" expanded="true" />
+            <element signature="e#7568#7569#0" expanded="true" />
+            <element signature="e#7599#7600#0" expanded="true" />
+            <element signature="e#9773#9795#0" expanded="false" />
+            <element signature="e#10913#11007#0" expanded="false" />
+            <element signature="e#11801#11812#0" expanded="false" />
+            <element signature="e#12798#12819#0" expanded="false" />
+            <element signature="e#13686#13728#0" expanded="false" />
+            <element signature="e#15954#16064#0" expanded="false" />
+            <element signature="e#18936#18938#0" expanded="false" />
             <element signature="method#trim#0;class#RollingBallPanel#0" expanded="false" />
-            <element signature="e#20388#20414#0" expanded="false" />
+            <element signature="e#20393#20419#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -66,7 +66,8 @@ public class RollingBallPanel extends View
             {0,0,0,0},
             {0,0,0,0}
         }
-    };//NÃO SE ESQUEÇA DE ATUALIZAR AS FLAGS ABAIXO
+    };
+    //NÃO SE ESQUEÇA DE ATUALIZAR AS FLAGS ABAIXO
     final int NUM_SCENARIOS = 3; //número de cenários existentes (no momento, 3)
     final int SQUARES[] = {1,3,3}; //número de quadrados de cada cenário (no momento o cenario 1 tem 1 e o resto tem 3)
     int chosenScenario; //cenário escolhido para ser desenhado
