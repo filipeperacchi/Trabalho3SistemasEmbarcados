@@ -28,19 +28,28 @@ public class RollingBallPanel extends View
     /*SCENARIOS[][][]:
     Contém os cenários do jogo. Como está descrito abaixo, cada
     cenário tem a descrição dos quadrados (só os vermelhos) que
-    o compoem. As coordenadas estão organizadas dessa forma:
+    o compoem. As coordenadas estão organizadas de acordo com o
+    seguinte padrão:
 
     {L,T,R,B} = L: left, T: top, R: right, B: bottom.
 
-    As coordenadas devem ser armazenadas dessa forma ou o
-    quadrado não será desenhado ou será desenhado errado.
+    As coordenadas devem ser armazenadas seguindo ese padrão ou
+    o quadrado não será desenhado ou será desenhado errado.
 
                Top              Plano cartesiano da tela do celular:
             _________               +-------------------------> +X
             |       |          =>   |                       |
-    Left    |       |   Right  =>   |   tela do celular     |
+    Left    |       |   Right  =>   |    tela do celular    |
             |_______|          =>   |                       |
              Bottom                 ↓ +Y                    |
+
+    No meu celular (Moto E) as dimensões da tela são:
+    x: [0, 540]     y: [0,888]
+
+    NÃO colocar quadrados vermelhos nos intervalos:
+    x:[0,180] & y:[0,180] //quadrado verde do canto superior esquerdo
+    x:[360,540] & y:[708,888] //quadrado verde do canto inferior direito
+    isso é pra evitar que tenha quadrados vermelhos muito perto dos verdes
     */
     final float SCENARIOS[][][] =
     { //scenarios
@@ -440,6 +449,7 @@ public class RollingBallPanel extends View
         canvas.drawText("Screen Width: " + screenWidth, 0, screenHeight/10f - 50, statsPaint);
         canvas.drawText("Screen Height: " + screenHeight, 0, screenHeight/10f - 25, statsPaint);
         canvas.drawText("Scenario: " + chosenScenario, 0, screenHeight/10f + 0, statsPaint);
+        canvas.drawText("Ball position: " + (int)xBallCenter + " " + (int)yBallCenter, 0, screenHeight/10f + 25, statsPaint);
 
 		if (labelColor != 0x00ffffff) {
 			labelPaint.setColor(labelColor);
