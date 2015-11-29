@@ -83,8 +83,8 @@ public class RollingBallPanel extends View
 	final float PATH_WIDTH_WIDE = 8.0f; // ... x ball diameter
 	final float BALL_START_X = 100;
 	final float BALL_START_Y = 100;
-	final float FINISH_SQUARE_A[] = {100, -300, 200, -400}; //left, top, right, bottom
-	final float FINISH_SQUARE_B[] = {-200, 400, -100, 300}; //left, top, right, bottom
+	final float FINISH_SQUARE_A[] = {125, -300, 225, -400}; //left, top, right, bottom
+	final float FINISH_SQUARE_B[] = {-225, 400, -125, 300}; //left, top, right, bottom
 	float finishSquare[];
 	int levelCleared = 0;
 	boolean tapToExit = false;
