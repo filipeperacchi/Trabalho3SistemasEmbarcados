@@ -2,10 +2,14 @@ package ca.yorku.cse.mack.demotiltballcse03076;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import java.io.IOException;
 
 /**
  * Original code structure by:
@@ -23,6 +27,8 @@ import android.widget.Spinner;
 
 public class DemoTiltBallSetup extends Activity 
 {
+	private MediaPlayer mediaPlayer;
+
 	private Spinner spinOrderOfControl, spinGain, spinPathMode, spinPathWidth, spinlapNum;
 
 	final String[] ORDER_OF_CONTROL = { "Default", "Invert X", "Invert Y", "Invert All" }; // NOTE: do not change strings
@@ -41,6 +47,11 @@ public class DemoTiltBallSetup extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.setup);
+
+		mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.duck_after_the_bread);
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mediaPlayer.setLooping(true);
+		mediaPlayer.start();
 
 		spinOrderOfControl = (Spinner) findViewById(R.id.paramOrderOfControl);
 		ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<CharSequence>(this, R.layout.spinnerstyle, ORDER_OF_CONTROL);
@@ -65,6 +76,18 @@ public class DemoTiltBallSetup extends Activity
 		ArrayAdapter<CharSequence> adapter5 = new ArrayAdapter<CharSequence>(this, R.layout.spinnerstyle, NUM_LAPS);
 		spinlapNum.setAdapter(adapter5);
 		spinlapNum.setSelection(1); // 1 Lap
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mediaPlayer.pause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		mediaPlayer.start();
 	}
 
 	/** Called when the "OK" button is pressed. */

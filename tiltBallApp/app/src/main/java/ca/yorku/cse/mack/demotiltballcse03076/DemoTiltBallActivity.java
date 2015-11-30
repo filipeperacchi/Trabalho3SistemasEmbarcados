@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
@@ -17,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+
+import java.io.IOException;
 
 /**
 * DemoAndroid - with modifications by...
