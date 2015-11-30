@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.util.AttributeSet;
@@ -178,13 +180,17 @@ public class RollingBallPanel extends View
 		finishFillPaint.setStyle(Paint.Style.FILL);
 
 		dangerLinePaint = new Paint();
-		dangerLinePaint.setColor(Color.RED);
+		dangerLinePaint.setColor(Color.GRAY);
 		dangerLinePaint.setStyle(Paint.Style.STROKE);
 		dangerLinePaint.setStrokeWidth(5);
 		dangerLinePaint.setAntiAlias(true);
 
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.walls);
+		BitmapShader fillBMPshader = new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+
 		dangerFillPaint = new Paint();
-		dangerFillPaint.setColor(0xfffd9494);
+		//dangerFillPaint.setColor(0xfffd9494);
+		dangerFillPaint.setShader(fillBMPshader);
 		dangerFillPaint.setStyle(Paint.Style.FILL);
 
 		screenBorderPaint = new Paint();
