@@ -43,24 +43,25 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </TableRow>
 
-        <TableRow android:visibility="invisible">
+        <TableRow android:visibility="visible">
 
             <TextView
                 android:id="@+id/paramLabelGain"
                 android:gravity="right"
                 android:paddingRight="5dp"
                 android:text="@string/paramlabelgaintext"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:visibility="visible" />
 
             <Spinner
                 android:id="@+id/paramGain"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:visibility="invisible" />
+                android:visibility="visible" />
         </TableRow>
 
-        <TableRow>
+        <TableRow android:visibility="visible">
 
             <TextView
                 android:id="@+id/paramLabelPathType"
@@ -68,14 +69,14 @@
                 android:paddingRight="5dp"
                 android:text="@string/paramlabelpathtypetext"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:visibility="invisible" />
+                android:visibility="visible" />
 
             <Spinner
                 android:id="@+id/paramPathType"
                 android:layout_weight="1"
                 android:gravity="left"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:visibility="invisible" />
+                android:visibility="visible" />
         </TableRow>
 
         <TableRow>

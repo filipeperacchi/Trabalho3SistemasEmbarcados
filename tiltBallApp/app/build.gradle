@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "ca.yorku.cse.mack.demotiltballcse03076"
         minSdkVersion 22
-        targetSdkVersion 22
+        targetSdkVersion 12
     }
     buildTypes {
         release {

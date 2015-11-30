@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.media.MediaPlayer;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -62,19 +66,52 @@ public class RollingBallPanel extends View
             {400,600,450,650}  //scenario 2: square 3 coordinates
         },
         { //scenario 3
-            {0,0,0,0},
-            {0,0,0,0},
-            {0,0,0,0}
+            {0,708,360,888},
+            {180,0,540,180},
+            {180,180,360,400},
+            {180,500,360,888}
+        },
+        { //scenario 4
+            {0,195,70,276},
+            {109,195,180,276},
+            {181,0,222,800},
+            {223,522,265,674},
+            {275,205,317,357},
+            {318,79,359,879},
+            {360,603,431,684},
+            {468,603,539,684}
+        },
+        { //scenario 5
+            {180,0,540,180},
+            {120,241,411,274},
+            {0,377,44,421},
+            {219,354,288,658},
+            {289,354,455,422},
+            {146,456,192,502},
+            {78,583,153,658},
+            {373,593,539,658},
+            {73,753,200,880}
+        },
+        { //scenario 6
+            {0,222,178,655},
+            {362,222,539,655},
+            {205,222,228,655},
+            {307,236,361,256},
+            {229,287,284,401},
+            {342,304,361,360},
+            {318,411,361,451},
+            {283,487,361,504},
+            {337,541,361,641},
+            {236,571,293,650}
         }
     };
-    //NÃO SE ESQUEÇA DE ATUALIZAR AS FLAGS ABAIXO
-    final int NUM_SCENARIOS = 3; //número de cenários existentes (no momento, 3)
-    final int SQUARES[] = {1,3,3}; //número de quadrados de cada cenário (no momento o cenario 1 tem 1 e o resto tem 3)
     int chosenScenario; //cenário escolhido para ser desenhado
 
 	final static String MYDEBUG = "MYDEBUG"; // for Log.i messages
 	final float DEGREES_TO_RADIANS = 0.0174532925f;
 	final int DEFAULT_BALL_DIAMETER = 10;
+    // don't allow tiltMagnitude to exceed 15 degrees
+    final float MAX_MAGNITUDE = 15f;
 	
 	// the ball diameter will be min(screenWidth, screenHeight) / this_value
 	final float BALL_DIAMETER_ADJUST_FACTOR = 15;
@@ -100,8 +137,9 @@ public class RollingBallPanel extends View
 	boolean tapToExit = false;
 	boolean tapToStart = false; //locks the ball position on start of level, player must tap screen to start
 	boolean timeStop = false; //if true, ball does not move
+    boolean tiltLimiter; //define se a aura amarela da bolinha aparece ou não
 	int currentLevel; //contador de nível do jogo (cada vez que toca no quadrado verde = +1 level)
-    int invertOption, invertX, invertY;
+    int invertOption, invertX, invertY, difficulty;
 	//~~~~~~~
     Random random;
 
@@ -123,7 +161,7 @@ public class RollingBallPanel extends View
 	float screenWidth, screenHeight, scalingFactor;
 	int gap, offset;
 
-	RectF dangerRectangle, finishRectangle, screenBorderRectangle, innerShadowRectangle, ballNow, lineStart, lapCheckOne, lapDirectionCheck;
+	RectF dangerRectangle, finishRectangle, screenBorderRectangle, aroundBallRectangle, ballNow, lineStart, lapCheckOne, lapDirectionCheck;
 	float pathWidth;
 	boolean touchFlag;
 	Vibrator vib;
@@ -139,7 +177,7 @@ public class RollingBallPanel extends View
 	float dBall; // the amount to move the ball (in pixels): dBall = dT * velocity
 	float xCenter, yCenter; // the center of the screen
 	long now, lastT;
-	Paint statsPaint, labelPaint, dangerLinePaint, dangerFillPaint, finishLinePaint, finishFillPaint, screenBorderPaint;
+	Paint statsPaint, labelPaint, dangerLinePaint, dangerFillPaint, finishLinePaint, finishFillPaint, screenBorderPaint, aroundBallPaint;
 	int labelColor = 0x00ffffff;
 
 	public RollingBallPanel(Context contextArg)
@@ -161,10 +199,18 @@ public class RollingBallPanel extends View
 	}
 
 	// things that can be initialized from within this View
+	MediaPlayer explosionSound;
+	MediaPlayer triumphSound;
 	private void initialize()
 	{
         random = new Random();
 		finishSquare = FINISH_SQUARE_A;
+
+		// Load SFX
+		explosionSound = MediaPlayer.create(getContext(), R.raw.lowmidafarexplosion);
+		triumphSound = MediaPlayer.create(getContext(), R.raw.triumph);
+		explosionSound.setVolume(1f, 1f);
+		triumphSound.setVolume(0.3f, 0.3f);
 
 		finishLinePaint = new Paint();
 		finishLinePaint.setColor(0xff6ab64a);
@@ -176,18 +222,29 @@ public class RollingBallPanel extends View
 		finishFillPaint.setColor(0xffc3ffaa);
 		finishFillPaint.setStyle(Paint.Style.FILL);
 
+        aroundBallPaint = new Paint();
+        aroundBallPaint.setColor(0xaaffff00);
+        aroundBallPaint.setStyle(Paint.Style.STROKE);
+        aroundBallPaint.setStrokeWidth(5);
+        aroundBallPaint.setAntiAlias(true);
+
 		dangerLinePaint = new Paint();
-		dangerLinePaint.setColor(Color.RED);
+		dangerLinePaint.setColor(Color.DKGRAY);
 		dangerLinePaint.setStyle(Paint.Style.STROKE);
 		dangerLinePaint.setStrokeWidth(5);
 		dangerLinePaint.setAntiAlias(true);
 
+		Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.walls);
+		BitmapShader fillBMPshader = new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+
 		dangerFillPaint = new Paint();
-		dangerFillPaint.setColor(0xfffd9494);
+		//dangerFillPaint.setColor(0xfffd9494);
+		dangerFillPaint.setShader(fillBMPshader);
 		dangerFillPaint.setStyle(Paint.Style.FILL);
 
 		screenBorderPaint = new Paint();
-		screenBorderPaint.setColor(Color.DKGRAY);
+		//screenBorderPaint.setColor(Color.DKGRAY);
+		screenBorderPaint.setShader(fillBMPshader);
 		screenBorderPaint.setStyle(Paint.Style.STROKE);
 		screenBorderPaint.setStrokeWidth(5);
 		screenBorderPaint.setAntiAlias(true);
@@ -208,8 +265,6 @@ public class RollingBallPanel extends View
 		temp = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
 		ball = Bitmap.createScaledBitmap(temp, ballDiameter, ballDiameter, true);
 
-		this.setBackgroundColor(Color.BLACK);
-
 		pathWidth = PATH_WIDTH_MEDIUM * ballDiameter; // default
 		touchFlag = false;
 
@@ -218,7 +273,7 @@ public class RollingBallPanel extends View
 		lapDirectionCheck  = new RectF();
 		finishRectangle = new RectF();
 		dangerRectangle = new RectF();
-		innerShadowRectangle = new RectF();
+        aroundBallRectangle = new RectF();
 		screenBorderRectangle = new RectF();
 		ballNow = new RectF();
 		currentLevel = 0;
@@ -255,8 +310,6 @@ public class RollingBallPanel extends View
 		dT = (now - lastT) / 1000000000f; // seconds
 		lastT = now;
 
-		// don't allow tiltMagnitude to exceed 30 degrees
-		final float MAX_MAGNITUDE = 30f;
 		tiltMagnitude = tiltMagnitude > MAX_MAGNITUDE ? MAX_MAGNITUDE : tiltMagnitude;
 
 		// This is the only code that distinguishes velocity-control from position-control
@@ -264,7 +317,7 @@ public class RollingBallPanel extends View
 //		{
 			if (!timeStop) {
 				// compute how far the ball should move
-				velocity = tiltMagnitude * gain;
+				velocity = tiltMagnitude * gain + currentLevel * difficulty;
 				dBall = dT * velocity; // make the ball move this amount (pixels)
 
 				// compute the ball's new coordinates
@@ -306,9 +359,9 @@ public class RollingBallPanel extends View
 //			vib.vibrate(10); // 10 ms vibrotactile pulse
 //			timeStop = true;
 //			invalidate();
-            chosenScenario = random.nextInt(NUM_SCENARIOS); //nº entre 0 e NUM_SCENARIOS-1
+            chosenScenario = random.nextInt(SCENARIOS.length); //nº entre 0 e NUM_SCENARIOS-1
             while (chosenScenario == 0)
-                chosenScenario = random.nextInt(NUM_SCENARIOS); //nº 0 não tem obstáculos, é apenas o level inicial
+                chosenScenario = random.nextInt(SCENARIOS.length); //nº 0 não tem obstáculos, é apenas o level inicial
 
 			++currentLevel;
 			levelCleared = 1;
@@ -323,6 +376,7 @@ public class RollingBallPanel extends View
 			finishRectangle.right = xCenter + finishSquare[2];
 			finishRectangle.bottom = yCenter - finishSquare[3];
 
+			triumphSound.start();
 		}//bola acerta quadrado vermelho = LOSE
 		else if (ballTouchingLine() == -1 && !touchFlag && levelCleared != -1)
 		{
@@ -331,6 +385,8 @@ public class RollingBallPanel extends View
 			levelCleared = -1;
 			timeStop = true;
 			invalidate();
+
+			explosionSound.start();
 		}//bola encostou no quadrado vermelho, esperando toque para voltar ao menu
 		else if (ballTouchingLine() == 0 && touchFlag && tapToExit) {
 			touchFlag = false;
@@ -389,36 +445,33 @@ public class RollingBallPanel extends View
 
 
 		// draw the paths
-		if (pathType == PATH_TYPE_SQUARE)
-		{
-			// draw screen border
-			canvas.drawRect(screenBorderRectangle, screenBorderPaint);
+		// draw screen border
+		canvas.drawRect(screenBorderRectangle, screenBorderPaint);
 
-			// draw finish square
-			canvas.drawRect(finishRectangle, finishFillPaint);
-			canvas.drawRect(finishRectangle, finishLinePaint);
+		// draw finish square
+		canvas.drawRect(finishRectangle, finishFillPaint);
+		canvas.drawRect(finishRectangle, finishLinePaint);
 
-			// draw danger square
+		// draw danger square
 //			canvas.drawRect(dangerRectangle, dangerLinePaint);
 //			canvas.drawRect(dangerRectangle, dangerFillPaint);
 
-            for (i=0; i<SQUARES[chosenScenario]; i++) {
-                //desenha bordas
-                canvas.drawRect(
-                        SCENARIOS[chosenScenario][i][0],
-                        SCENARIOS[chosenScenario][i][1],
-                        SCENARIOS[chosenScenario][i][2],
-                        SCENARIOS[chosenScenario][i][3],
-                        dangerLinePaint);
-                //desenha preenchimento
-                canvas.drawRect(
-                        SCENARIOS[chosenScenario][i][0],
-                        SCENARIOS[chosenScenario][i][1],
-                        SCENARIOS[chosenScenario][i][2],
-                        SCENARIOS[chosenScenario][i][3],
-                        dangerFillPaint);
-            }
-		}
+        for (i=0; i<SCENARIOS[chosenScenario].length; i++) {
+            //desenha bordas
+            canvas.drawRect(
+                    SCENARIOS[chosenScenario][i][0],
+                    SCENARIOS[chosenScenario][i][1],
+                    SCENARIOS[chosenScenario][i][2],
+                    SCENARIOS[chosenScenario][i][3],
+                    dangerLinePaint);
+            //desenha preenchimento
+            canvas.drawRect(
+                    SCENARIOS[chosenScenario][i][0],
+                    SCENARIOS[chosenScenario][i][1],
+                    SCENARIOS[chosenScenario][i][2],
+                    SCENARIOS[chosenScenario][i][3],
+                    dangerFillPaint);
+        }
 //		else if (pathType == PATH_TYPE_CIRCLE)
 //		{
 //			// draw fills
@@ -450,10 +503,11 @@ public class RollingBallPanel extends View
 
         canvas.drawText("Level "+ currentLevel, screenWidth - 165, screenHeight/10f - 50, statsPaint);
         //debug :P
-        canvas.drawText("Screen Width: " + screenWidth, 0, screenHeight/10f - 50, statsPaint);
-        canvas.drawText("Screen Height: " + screenHeight, 0, screenHeight/10f - 25, statsPaint);
-        canvas.drawText("Scenario: " + chosenScenario, 0, screenHeight/10f + 0, statsPaint);
-        canvas.drawText("Ball position: " + (int)xBallCenter + " " + (int)yBallCenter, 0, screenHeight/10f + 25, statsPaint);
+//        canvas.drawText("Screen Width: " + screenWidth, 0, screenHeight/10f - 25, statsPaint);
+//        canvas.drawText("Screen Height: " + screenHeight, 0, screenHeight/10f - 0, statsPaint);
+//        canvas.drawText("Scenario: " + chosenScenario, 0, screenHeight/10f + 25, statsPaint);
+//        canvas.drawText("Ball position: " + (int)xBallCenter + " " + (int)yBallCenter, 0, screenHeight/10f + 50, statsPaint);
+//        canvas.drawText("Speed: " + (int)velocity, 0, screenHeight/10f + 75, statsPaint);
 
 		if (labelColor != 0x00ffffff) {
 			labelPaint.setColor(labelColor);
@@ -466,6 +520,15 @@ public class RollingBallPanel extends View
 			canvas.drawText("Game", 0, screenHeight / 3f, labelPaint);
 			canvas.drawText("Over!", 0, 2 * screenHeight / 3f, labelPaint);
 		}
+
+        //aura amarela envolta da bolinha indica ângulo máx. de inclinação do celular
+        if (tiltMagnitude >= MAX_MAGNITUDE && tiltLimiter) {
+            aroundBallRectangle.left = xBall - 3;
+            aroundBallRectangle.top = yBall - 3;
+            aroundBallRectangle.right = xBall + ballDiameter + 3;
+            aroundBallRectangle.bottom = yBall + ballDiameter + 3;
+            canvas.drawOval(aroundBallRectangle, aroundBallPaint);
+        }
 
 //			canvas.drawText("-----------------", 6f, screenHeight - offset - 4f * (statsTextSize + gap), statsPaint);
 //		}
@@ -516,23 +579,30 @@ public class RollingBallPanel extends View
             case 2: invertX = 1; invertY = -1; break;
             case 3: invertX = -1; invertY = -1; break;
         }
+        switch (difficulty) {
+            case 0: difficulty = 1; break;
+            case 1: difficulty = 2; break;
+            case 2: difficulty = 5; break;
+            case 3: difficulty = 10; break;
+            case 4: difficulty = 20; break;
+        }
 
 		screenWidth = w;
 		screenHeight = h;
 		scalingFactor = scalingFactorArg;
 
-		if (pathMode.equals("Square"))
-			pathType = PATH_TYPE_SQUARE;
-		else if (pathMode.equals("Circle"))
-			pathType = PATH_TYPE_CIRCLE;
-		else
-			pathType = MODE_NONE;
+//		if (pathMode.equals("Square"))
+//			pathType = PATH_TYPE_SQUARE;
+//		else if (pathMode.equals("Circle"))
+//			pathType = PATH_TYPE_CIRCLE;
+//		else
+//			pathType = MODE_NONE;
 
-		if (pathWidthArg.equals("Narrow"))
-			pathWidth = PATH_WIDTH_NARROW;
-		else if (pathWidthArg.equals("Wide"))
-			pathWidth = PATH_WIDTH_WIDE;
-		else
+//		if (pathWidthArg.equals("Narrow"))
+//			pathWidth = PATH_WIDTH_NARROW;
+//		else if (pathWidthArg.equals("Wide"))
+//			pathWidth = PATH_WIDTH_WIDE;
+//		else
 			pathWidth = PATH_WIDTH_MEDIUM;
 
 		xCenter = w / 2f;
@@ -606,8 +676,8 @@ public class RollingBallPanel extends View
 	{
         int i, status = 0;
 
-		if (pathType == PATH_TYPE_SQUARE)
-		{
+//		if (pathType == PATH_TYPE_SQUARE)
+//		{
 //			ballNow.left = xBall;
 //			ballNow.top = yBall;
 //			ballNow.right = xBall + ballDiameter;
@@ -623,7 +693,7 @@ public class RollingBallPanel extends View
 //			if (RectF.intersects(ballNow, dangerRectangle))
 //				return -1; // touching inside square
 
-            for (i=0; i<SQUARES[chosenScenario]; i++) {
+            for (i=0; i<SCENARIOS[chosenScenario].length; i++) {
                 dangerRectangle.left = SCENARIOS[chosenScenario][i][0];
                 dangerRectangle.top = SCENARIOS[chosenScenario][i][1];
                 dangerRectangle.right = SCENARIOS[chosenScenario][i][2];
@@ -632,19 +702,19 @@ public class RollingBallPanel extends View
                     status = -1;
             }
             return status;
-		}
+//		}
 
-		else if (pathType == PATH_TYPE_CIRCLE)
-		{
-			final float ballDistance = (float)Math.sqrt((xBallCenter - xCenter) * (xBallCenter - xCenter)
-					+ (yBallCenter - yCenter) * (yBallCenter - yCenter));
-
-			if (Math.abs(ballDistance - radiusOuter) < (ballDiameter / 2f))
-				return 1; // touching outer circle
-
-			if (Math.abs(ballDistance - radiusInner) < (ballDiameter / 2f))
-				return -1; // touching inner circle
-		}
-		return status;
+//		else if (pathType == PATH_TYPE_CIRCLE)
+//		{
+//			final float ballDistance = (float)Math.sqrt((xBallCenter - xCenter) * (xBallCenter - xCenter)
+//					+ (yBallCenter - yCenter) * (yBallCenter - yCenter));
+//
+//			if (Math.abs(ballDistance - radiusOuter) < (ballDiameter / 2f))
+//				return 1; // touching outer circle
+//
+//			if (Math.abs(ballDistance - radiusInner) < (ballDiameter / 2f))
+//				return -1; // touching inner circle
+//		}
+//		return status;
 	}
 }

@@ -2,10 +2,14 @@ package ca.yorku.cse.mack.demotiltballcse03076;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import java.io.IOException;
 
 /**
  * Original code structure by:
@@ -23,11 +27,13 @@ import android.widget.Spinner;
 
 public class DemoTiltBallSetup extends Activity 
 {
+	private MediaPlayer mediaPlayer;
+
 	private Spinner spinOrderOfControl, spinGain, spinPathMode, spinPathWidth, spinlapNum;
 
-	final String[] ORDER_OF_CONTROL = { "Default", "Invert X", "Invert Y", "Invert All" }; // NOTE: do not change strings
-	final String[] GAIN = { "Very low", "Low", "Medium", "High", "Very high" };
-	final String[] PATH_TYPE = { "Square", "Circle", "Free" };
+	final String[] ORDER_OF_CONTROL = { "Padrão", "Inverter X", "Inverter Y", "Inverter Todos" }; // NOTE: do not change strings
+	final String[] GAIN = { "Muito fácil", "Fácil", "Médio", "Difícil", "Muito difícil" };
+	final String[] PATH_TYPE = { "Ativar", "Desativar"};
 	final String[] PATH_WIDTH = { "Narrow", "Medium", "Wide" };
 	final String[] NUM_LAPS = {"1", "2", "3", "4", "5"};
 
@@ -41,6 +47,11 @@ public class DemoTiltBallSetup extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.setup);
+
+		mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.duck_after_the_bread);
+		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mediaPlayer.setLooping(true);
+		mediaPlayer.start();
 
 		spinOrderOfControl = (Spinner) findViewById(R.id.paramOrderOfControl);
 		ArrayAdapter<CharSequence> adapter2 = new ArrayAdapter<CharSequence>(this, R.layout.spinnerstyle, ORDER_OF_CONTROL);
@@ -67,22 +78,44 @@ public class DemoTiltBallSetup extends Activity
 		spinlapNum.setSelection(1); // 1 Lap
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		mediaPlayer.pause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		mediaPlayer.start();
+	}
+
 	/** Called when the "OK" button is pressed. */
 	public void clickOK(View view) 
 	{
 		// get user's choices... 
-		String orderOfControl = (String) spinOrderOfControl.getSelectedItem();
+		String invertOption = (String) spinOrderOfControl.getSelectedItem();
+        int difficultyOption = spinGain.getSelectedItemPosition();
+        int tiltOption = spinPathMode.getSelectedItemPosition();
 
 		// actual gain value depends on order of control
 		int invert;
-		if (orderOfControl.equals("Default"))
+		if (invertOption.equals("Padrão"))
             invert = 0;
-		else if (orderOfControl.equals("Invert X"))
+		else if (invertOption.equals("Inverter X"))
             invert = 1;
-        else if (orderOfControl.equals("Invert Y"))
+        else if (invertOption.equals("Inverter Y"))
             invert = 2;
         else
             invert = 3;
+
+        int difficulty = difficultyOption;
+        boolean tiltLimiter;
+
+        if (tiltOption == 0)
+            tiltLimiter = true;
+        else
+            tiltLimiter = false;
 
 		String pathType = PATH_TYPE[spinPathMode.getSelectedItemPosition()];
 		String pathWidth = PATH_WIDTH[spinPathWidth.getSelectedItemPosition()];
@@ -92,6 +125,8 @@ public class DemoTiltBallSetup extends Activity
 		b.putString("orderOfControl", "Velocity");
 		b.putInt("gain", GAIN_ARG_VELOCITY_CONTROL[0]);
         b.putInt("invert", invert);
+        b.putInt("difficulty", difficulty);
+        b.putBoolean("tiltLimiter", tiltLimiter);
 		b.putString("pathType", PATH_TYPE[0]);
 		b.putString("pathWidth", PATH_WIDTH[0]);
 		b.putString("totalLaps", NUM_LAPS[0]);
