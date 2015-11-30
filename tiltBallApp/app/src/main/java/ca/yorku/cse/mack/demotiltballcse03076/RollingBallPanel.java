@@ -166,6 +166,7 @@ public class RollingBallPanel extends View
 
 	// things that can be initialized from within this View
 	MediaPlayer explosionSound;
+	MediaPlayer triumphSound;
 	private void initialize()
 	{
         random = new Random();
@@ -173,7 +174,9 @@ public class RollingBallPanel extends View
 
 		// Load SFX
 		explosionSound = MediaPlayer.create(getContext(), R.raw.lowmidafarexplosion);
+		triumphSound = MediaPlayer.create(getContext(), R.raw.triumph);
 		explosionSound.setVolume(1f, 1f);
+		triumphSound.setVolume(0.3f, 0.3f);
 
 		finishLinePaint = new Paint();
 		finishLinePaint.setColor(0xff6ab64a);
@@ -335,6 +338,7 @@ public class RollingBallPanel extends View
 			finishRectangle.right = xCenter + finishSquare[2];
 			finishRectangle.bottom = yCenter - finishSquare[3];
 
+			triumphSound.start();
 		}//bola acerta quadrado vermelho = LOSE
 		else if (ballTouchingLine() == -1 && !touchFlag && levelCleared != -1)
 		{
