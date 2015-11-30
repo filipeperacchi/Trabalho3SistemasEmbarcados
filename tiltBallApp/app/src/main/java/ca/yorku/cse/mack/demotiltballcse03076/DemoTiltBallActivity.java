@@ -75,12 +75,18 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 
 	ScreenRefreshTimer refreshScreen;
 
+	MediaPlayer mediaPlayer;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+		// Inicia a música
+		mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.epicsong);
+		mediaPlayer.start();
 
 		// get parameters selected by user from setup dialog
 		Bundle b = getIntent().getExtras();
@@ -197,6 +203,7 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 		sm.registerListener(this, sO, SensorManager.SENSOR_DELAY_GAME); // good enough!
 		sm.registerListener(this, sA, SensorManager.SENSOR_DELAY_GAME);
 		sm.registerListener(this, sM, SensorManager.SENSOR_DELAY_GAME);
+		mediaPlayer.start();
 	}
 
 	@Override
@@ -204,6 +211,7 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 	{
 		super.onPause();
 		sm.unregisterListener(this);
+		mediaPlayer.pause();
 	}
 
 	@Override

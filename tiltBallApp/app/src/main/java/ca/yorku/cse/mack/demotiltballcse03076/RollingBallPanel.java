@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.View;
@@ -207,8 +208,6 @@ public class RollingBallPanel extends View
 		ballDiameter = DEFAULT_BALL_DIAMETER;
 		temp = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
 		ball = Bitmap.createScaledBitmap(temp, ballDiameter, ballDiameter, true);
-
-		this.setBackgroundColor(Color.BLACK);
 
 		pathWidth = PATH_WIDTH_MEDIUM * ballDiameter; // default
 		touchFlag = false;
