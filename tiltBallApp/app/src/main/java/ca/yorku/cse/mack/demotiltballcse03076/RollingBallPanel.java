@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -164,10 +165,15 @@ public class RollingBallPanel extends View
 	}
 
 	// things that can be initialized from within this View
+	MediaPlayer explosionSound;
 	private void initialize()
 	{
         random = new Random();
 		finishSquare = FINISH_SQUARE_A;
+
+		// Load SFX
+		explosionSound = MediaPlayer.create(getContext(), R.raw.lowmidafarexplosion);
+		explosionSound.setVolume(1f, 1f);
 
 		finishLinePaint = new Paint();
 		finishLinePaint.setColor(0xff6ab64a);
@@ -180,7 +186,7 @@ public class RollingBallPanel extends View
 		finishFillPaint.setStyle(Paint.Style.FILL);
 
 		dangerLinePaint = new Paint();
-		dangerLinePaint.setColor(Color.GRAY);
+		dangerLinePaint.setColor(Color.DKGRAY);
 		dangerLinePaint.setStyle(Paint.Style.STROKE);
 		dangerLinePaint.setStrokeWidth(5);
 		dangerLinePaint.setAntiAlias(true);
@@ -194,7 +200,8 @@ public class RollingBallPanel extends View
 		dangerFillPaint.setStyle(Paint.Style.FILL);
 
 		screenBorderPaint = new Paint();
-		screenBorderPaint.setColor(Color.DKGRAY);
+		//screenBorderPaint.setColor(Color.DKGRAY);
+		screenBorderPaint.setShader(fillBMPshader);
 		screenBorderPaint.setStyle(Paint.Style.STROKE);
 		screenBorderPaint.setStrokeWidth(5);
 		screenBorderPaint.setAntiAlias(true);
@@ -336,6 +343,8 @@ public class RollingBallPanel extends View
 			levelCleared = -1;
 			timeStop = true;
 			invalidate();
+
+			explosionSound.start();
 		}//bola encostou no quadrado vermelho, esperando toque para voltar ao menu
 		else if (ballTouchingLine() == 0 && touchFlag && tapToExit) {
 			touchFlag = false;

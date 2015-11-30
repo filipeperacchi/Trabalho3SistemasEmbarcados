@@ -86,6 +86,8 @@ public class DemoTiltBallActivity extends Activity implements SensorEventListene
 
 		// Inicia a música
 		mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.epicsong);
+		mediaPlayer.setVolume(0.5f, 0.5f);
+		mediaPlayer.setLooping(true);
 		mediaPlayer.start();
 
 		// get parameters selected by user from setup dialog
