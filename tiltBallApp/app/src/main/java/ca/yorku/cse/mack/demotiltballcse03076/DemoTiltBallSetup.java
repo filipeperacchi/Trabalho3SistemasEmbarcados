@@ -89,7 +89,11 @@ public class DemoTiltBallSetup extends Activity
 	@Override
 	public void onResume() {
 		super.onResume();
-		Intent intent = getIntent();
+		try {
+			Thread.sleep(100);
+		}catch (InterruptedException e){
+			e.printStackTrace();
+		}
 		mediaPlayer.seekTo(mediaPointer);
 		mediaPlayer.start();
 	}
