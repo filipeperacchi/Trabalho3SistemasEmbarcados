@@ -23,28 +23,33 @@ public final class R {
         public static final int walls=0x7f020004;
     }
     public static final class id {
-        public static final int Button01=0x7f070012;
-        public static final int Button03=0x7f070014;
-        public static final int buttonCredits=0x7f070013;
-        public static final int imageView=0x7f070002;
-        public static final int imageView2=0x7f070000;
-        public static final int imageView3=0x7f070001;
-        public static final int paramGain=0x7f07000b;
-        public static final int paramLabelGain=0x7f07000a;
-        public static final int paramLabelOrderOfControl=0x7f070008;
-        public static final int paramLabelPathType=0x7f07000c;
-        public static final int paramLabelPathWidth=0x7f07000e;
-        public static final int paramLabellapNum=0x7f070010;
-        public static final int paramOrderOfControl=0x7f070009;
-        public static final int paramPathType=0x7f07000d;
-        public static final int paramPathWidth=0x7f07000f;
-        public static final int paramlapNum=0x7f070011;
-        public static final int rollingballpanel=0x7f070006;
-        public static final int setupTitle=0x7f070007;
-        public static final int spinnerstyle=0x7f070015;
-        public static final int textView=0x7f070003;
-        public static final int textView2=0x7f070004;
-        public static final int textView3=0x7f070005;
+        public static final int Button01=0x7f070017;
+        public static final int Button03=0x7f070019;
+        public static final int buttonCredits=0x7f070018;
+        public static final int imageView=0x7f070001;
+        public static final int imageView3=0x7f070000;
+        public static final int imageView4=0x7f070005;
+        public static final int paramGain=0x7f070010;
+        public static final int paramLabelGain=0x7f07000f;
+        public static final int paramLabelOrderOfControl=0x7f07000d;
+        public static final int paramLabelPathType=0x7f070011;
+        public static final int paramLabelPathWidth=0x7f070013;
+        public static final int paramLabellapNum=0x7f070015;
+        public static final int paramOrderOfControl=0x7f07000e;
+        public static final int paramPathType=0x7f070012;
+        public static final int paramPathWidth=0x7f070014;
+        public static final int paramlapNum=0x7f070016;
+        public static final int rollingballpanel=0x7f07000b;
+        public static final int scrollView=0x7f070006;
+        public static final int setupTitle=0x7f07000c;
+        public static final int spinnerstyle=0x7f07001a;
+        public static final int textView=0x7f070002;
+        public static final int textView2=0x7f070003;
+        public static final int textView3=0x7f070004;
+        public static final int textView4=0x7f070007;
+        public static final int textView5=0x7f070008;
+        public static final int textView6=0x7f070009;
+        public static final int textView7=0x7f07000a;
     }
     public static final class layout {
         public static final int credits=0x7f030000;
@@ -63,14 +68,17 @@ public final class R {
         public static final int button01text=0x7f060001;
         public static final int button03text=0x7f060002;
         public static final int creditos_button=0x7f060003;
-        public static final int credits_dev_alex=0x7f060004;
-        public static final int credits_dev_filipe=0x7f060005;
-        public static final int credits_developed_by=0x7f060006;
-        public static final int paramlabelgaintext=0x7f060007;
-        public static final int paramlabellapNum=0x7f060008;
-        public static final int paramlabelorderofcontroltext=0x7f060009;
-        public static final int paramlabelpathtypetext=0x7f06000a;
-        public static final int paramlabelpathwidthtext=0x7f06000b;
-        public static final int setuptitletext=0x7f06000c;
+        public static final int credits_audio_license_title=0x7f060004;
+        public static final int credits_dev_alex=0x7f060005;
+        public static final int credits_dev_filipe=0x7f060006;
+        public static final int credits_developed_by=0x7f060007;
+        public static final int credits_duck_after_the_bread=0x7f060008;
+        public static final int credits_epic_song=0x7f060009;
+        public static final int paramlabelgaintext=0x7f06000a;
+        public static final int paramlabellapNum=0x7f06000b;
+        public static final int paramlabelorderofcontroltext=0x7f06000c;
+        public static final int paramlabelpathtypetext=0x7f06000d;
+        public static final int paramlabelpathwidthtext=0x7f06000e;
+        public static final int setuptitletext=0x7f06000f;
     }
 }

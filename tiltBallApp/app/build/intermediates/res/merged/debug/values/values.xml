@@ -11,9 +11,12 @@
     <string name="button01text">Jogar</string>
     <string name="button03text">Sair</string>
     <string name="creditos_button">Créditos</string>
+    <string name="credits_audio_license_title">As trilhas sonoras utilizadas neste software são propriedades intelectuais dos seus respectivos autores.</string>
     <string name="credits_dev_alex">Alex Pedroso de Moraes</string>
     <string name="credits_dev_filipe">Filipe Peracchi Pisoni</string>
     <string name="credits_developed_by">DESENVOLVIDO POR</string>
+    <string name="credits_duck_after_the_bread">Duck after the bread by Boris &amp; Olivier\nis licensed under a Attribution-Noncommercial 2.5 Switzerland License.\nCC BY NC</string>
+    <string name="credits_epic_song">Epic Song by BoxCat Games\nis licensed under a Creative Commons Attribution License.\nCC BY</string>
     <string name="paramlabelgaintext">Dificuldade</string>
     <string name="paramlabellapNum">Number of Laps</string>
     <string name="paramlabelorderofcontroltext">Inverter Eixo</string>
