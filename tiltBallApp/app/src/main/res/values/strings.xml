@@ -10,5 +10,9 @@
     <string name="paramlabellapNum">Number of Laps</string>
     <string name="button01text">Jogar</string>
     <string name="button03text">Sair</string>
+    <string name="creditos_button">Créditos</string>
+    <string name="credits_dev_alex">Alex Pedroso de Moraes</string>
+    <string name="credits_dev_filipe">Filipe Peracchi Pisoni</string>
+    <string name="credits_developed_by">DESENVOLVIDO POR</string>
 
 </resources>

@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/Antedeguemon/Documents/GitHub/Trabalho3SistemasEmbarcados/tiltBallApp/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/Alex/Documents/Trabalho3SistemasEmbarcados/tiltBallApp/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="credits_margin_left">100dp</dimen>
+    <dimen name="credits_margin_right">100dp</dimen>
+    <dimen name="credits_margin_top">300dp</dimen>
+    <!-- From: file:/C:/Users/Alex/Documents/Trabalho3SistemasEmbarcados/tiltBallApp/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">Demo Tilt Ball</string>
     <string name="button01text">Jogar</string>
     <string name="button03text">Sair</string>
+    <string name="creditos_button">Créditos</string>
+    <string name="credits_dev_alex">Alex Pedroso de Moraes</string>
+    <string name="credits_dev_filipe">Filipe Peracchi Pisoni</string>
+    <string name="credits_developed_by">DESENVOLVIDO POR</string>
     <string name="paramlabelgaintext">Dificuldade</string>
     <string name="paramlabellapNum">Number of Laps</string>
     <string name="paramlabelorderofcontroltext">Inverter Eixo</string>
